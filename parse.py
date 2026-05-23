@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from __future__ import annotations
-from types import Any
+from typing import Any
 from dataclasses import dataclass
 import iter_tokens as IT
 
@@ -43,13 +43,16 @@ class DivOp(BinaryOp):
 
 
 class Parser:
+    def __init__(self):
+        self.tok: IT.Token | None = None
+
     def parse(self, expr) -> Node:
         self.tokens = IT.iter_tokens(expr)
         self._advance()
         return self.expr()
 
     def _advance(self) -> IT.Token:
-        self.token, self.tok = self.tok, next(self.tokes)
+        self.token, self.tok = self.tok, next(self.tokens)
         return self.tok
 
     def _consume(self):
@@ -61,27 +64,27 @@ class Parser:
         self._consume()
 
     def expr(self) -> Node:
-        left: Node = self.term()
+        res: Node = self.term()
         while self.tok.val in ("+", "-"):
             op = self.tok
             self._consume()
             right = self.term()
             if op == "+":
-                res = PlusOp(left, right)
+                res = PlusOp(res, right)
             else:
-                res = MinusOp(left, right)
+                res = MinusOp(res, right)
         return res
 
     def term(self) -> Node:
-        left: Node = self.factor()
+        res: Node = self.factor()
         while self.tok.val in ("*", "/"):
             op = self.tok
             self._consume()
             right = self.factor()
             if op == "*":
-                res = MulOp(left, right)
+                res = MulOp(res, right)
             else:
-                res = DivOp(left, right)
+                res = DivOp(res, right)
         return res
 
     def factor(self) -> Node:
@@ -91,4 +94,9 @@ class Parser:
             self._expect(")")
             return res
         else:
-            return Number(self.tok.val)
+            return Number(None, None, self.tok.val)
+
+
+if __name__ == "__main__":
+    expr = Parser().parse(IT.expr)
+    print(expr)
