@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from typing import Iterator, Any
 import re
 from dataclasses import dataclass
 
@@ -9,7 +10,8 @@ expr = "2 + (3 + 4) * 5"
 
 @dataclass
 class Token:
-    pass
+    name: str
+    val: Any
 
 
 patterns: dict[str, str] = {
@@ -30,6 +32,15 @@ patterns: dict[str, str] = {
 
 master_pat = "|".join(val for val in patterns.values())
 
+
+def iter_tokens(expr: str) -> Iterator[Token]:
+    master_pat = "|".join(val for val in patterns.values())
+    for match in re.finditer(master_pat, expr):
+        tok = Token(match.lastgroup, match.group(0))
+        if tok.name != "WS":
+            yield tok
+
+
 if __name__ == "__main__":
-    for m in re.finditer(master_pat, expr):
-        print(m.lastgroup, m.group(0))
+    for tok in iter_tokens(expr):
+        print(tok)
