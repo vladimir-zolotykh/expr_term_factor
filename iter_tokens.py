@@ -13,16 +13,19 @@ class Token:
 
 
 patterns: dict[str, str] = {
-    "NAME": r"(?P<NAME>[A-Za-z]\w*)",
-    "NUM": r"(?P<NUM>\d+)",
-    "PLUS": r"(?P<PLUS>\+)",
-    "MINUS": r"(?P<MINUS>-)",
-    "MUL": r"(?P<MUL>\*)",
-    "DIV": r"(?P<DIV>\*)",
-    "EQ": r"(?P<EQ>=)",
-    "LPAREN": r"(?P<LPAREN>\()",
-    "RPAREN": r"(?P<RPAREN>\))",
-    "WS": r"(?P<WS>\s+)",
+    k: rf"(?P<{k}>{v})"
+    for k, v in {
+        "NAME": r"[A-Za-z]\w*",
+        "NUM": r"\d+",
+        "PLUS": r"\+",
+        "MINUS": r"-",
+        "MUL": r"\*",
+        "DIV": r"/",
+        "EQ": r"=",
+        "LPAREN": r"\(",
+        "RPAREN": r"\)",
+        "WS": r"\s+",
+    }.items()
 }
 
 master_pat = "|".join(val for val in patterns.values())
