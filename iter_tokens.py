@@ -25,8 +25,8 @@ patterns: dict[str, str] = {
     "WS": r"(?P<WS>\s+)",
 }
 
-master_pat = ", ".join(val for val in patterns.values())
+master_pat = "|".join(val for val in patterns.values())
 
 if __name__ == "__main__":
     for m in re.finditer(master_pat, expr):
-        print(m.lastgroup, m.group(1))
+        print(m.lastgroup, m.group(0))
