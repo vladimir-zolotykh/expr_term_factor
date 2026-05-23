@@ -52,11 +52,14 @@ class Parser:
         return self.expr()
 
     def _advance(self) -> IT.Token:
-        self.token, self.tok = self.tok, next(self.tokens)
-        return self.tok
+        try:
+            self.token, self.tok = self.tok, next(self.tokens)
+            return self.tok
+        except StopIteration:
+            return None
 
     def _consume(self):
-        self.token, self.tok = self.tok, next(self.tokes)
+        self.token, self.tok = self.tok, next(self.tokens)
 
     def _expect(self, expected: str) -> None:
         if self.tok.val != expected:
@@ -70,9 +73,9 @@ class Parser:
             self._consume()
             right = self.term()
             if op == "+":
-                res = PlusOp(res, right)
+                res = PlusOp(res, right, "+")
             else:
-                res = MinusOp(res, right)
+                res = MinusOp(res, right, "-")
         return res
 
     def term(self) -> Node:
@@ -82,9 +85,9 @@ class Parser:
             self._consume()
             right = self.factor()
             if op == "*":
-                res = MulOp(res, right)
+                res = MulOp(res, right, "*")
             else:
-                res = DivOp(res, right)
+                res = DivOp(res, right, "/")
         return res
 
     def factor(self) -> Node:
@@ -94,7 +97,10 @@ class Parser:
             self._expect(")")
             return res
         else:
-            return Number(None, None, self.tok.val)
+            # return Number(None, None, self.tok.val)
+            res = Number(None, None, self.tok.val)
+            self._advance()
+            return res
 
 
 if __name__ == "__main__":
