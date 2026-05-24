@@ -16,5 +16,5 @@ def test_unexpected_end_of_input_crashes(parser):
     a proper SyntaxError when the expression ends unexpectedly.
     """
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(SyntaxError):
         parser.parse("2 +")

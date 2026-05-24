@@ -68,6 +68,7 @@ class Parser:
             self.token, self.tok = self.tok, next(self.tokens)
         except StopIteration:
             self.tok = None
+            raise SyntaxError("Unexpected EOF")
 
     def _expect(self, expected: str) -> None:
         if self.tok.val != expected:
