@@ -58,26 +58,25 @@ class Parser:
 
     def _advance(self) -> IT.Token:
         try:
-            self.token, self.tok = self.tok, next(self.tokens)
+            self.tok = next(self.tokens)
             return self.tok
         except StopIteration:
             return None
 
     def _consume(self):
         try:
-            self.token, self.tok = self.tok, next(self.tokens)
+            self.tok = next(self.tokens)
         except StopIteration:
-            self.tok = None
             raise SyntaxError("Unexpected EOF")
 
     def _expect(self, expected: str) -> None:
-        if self.tok.val != expected:
+        if self.tok and self.tok.val != expected:
             raise SyntaxError(f"{expected} is expected, got f{self.tok.val}")
         self._consume()
 
     def expr(self) -> Node:
         res: Node = self.term()
-        while self.tok.val in ("+", "-"):
+        while self.tok and self.tok.val in ("+", "-"):
             op = self.tok.val
             self._consume()
             right = self.term()
@@ -89,7 +88,7 @@ class Parser:
 
     def term(self) -> Node:
         res: Node = self.factor()
-        while self.tok.val in ("*", "/"):
+        while self.tok and self.tok.val in ("*", "/"):
             op = self.tok.val
             self._consume()
             right = self.factor()
@@ -100,13 +99,12 @@ class Parser:
         return res
 
     def factor(self) -> Node:
-        if self.tok.val == "(":
+        if self.tok and self.tok.val == "(":
             self._consume()
             res = self.expr()
             self._expect(")")
             return res
         else:
-            # return Number(None, None, self.tok.val)
             res = Number(None, None, self.tok.val)
             self._advance()
             return res
