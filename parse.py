@@ -74,6 +74,11 @@ class Parser:
             raise SyntaxError(f"{expected} is expected, got f{self.tok.val}")
         self._consume()
 
+    def _expect_tok(self) -> IT.Token:
+        if self.tok is None:
+            raise SyntaxError("Unexpected EOF")
+        return self.tok
+
     def expr(self) -> Node:
         res: Node = self.term()
         while self.tok and (op := self.tok.val) in ("+", "-"):
@@ -95,11 +100,6 @@ class Parser:
             else:
                 res = DivOp(res, right, "/")
         return res
-
-    def _expect_tok(self) -> IT.Token:
-        if self.tok is None:
-            raise SyntaxError("Unexpected EOF")
-        return self.tok
 
     def factor(self) -> Node:
         tok = self._expect_tok()
