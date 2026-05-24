@@ -13,6 +13,10 @@ class Node:
     right: Node
     val: Any
 
+    def __repr__(self):
+        csv = ", ".join(f"{v}" for k, v in self.__dict__.items() if v is not None)
+        return f"{self.__class__.__name__}({csv})"
+
 
 class Number(Node):
     pass
