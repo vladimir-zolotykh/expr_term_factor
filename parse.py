@@ -76,8 +76,7 @@ class Parser:
 
     def expr(self) -> Node:
         res: Node = self.term()
-        while self.tok and self.tok.val in ("+", "-"):
-            op = self.tok.val
+        while self.tok and (op := self.tok.val) in ("+", "-"):
             self._consume()
             right = self.term()
             if op == "+":
@@ -88,8 +87,7 @@ class Parser:
 
     def term(self) -> Node:
         res: Node = self.factor()
-        while self.tok and self.tok.val in ("*", "/"):
-            op = self.tok.val
+        while self.tok and (op := self.tok.val) in ("*", "/"):
             self._consume()
             right = self.factor()
             if op == "*":
