@@ -64,7 +64,10 @@ class Parser:
             return None
 
     def _consume(self):
-        self.token, self.tok = self.tok, next(self.tokens)
+        try:
+            self.token, self.tok = self.tok, next(self.tokens)
+        except StopIteration:
+            self.tok = None
 
     def _expect(self, expected: str) -> None:
         if self.tok.val != expected:
