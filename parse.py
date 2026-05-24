@@ -32,19 +32,23 @@ class BinaryOp(Node):
 
 
 class PlusOp(BinaryOp):
-    pass
+    def __init__(self, left, right, val="+"):
+        super().__init__(left, right, val)
 
 
 class MinusOp(BinaryOp):
-    pass
+    def __init__(self, left, right, val="-"):
+        super().__init__(left, right, val)
 
 
 class MulOp(BinaryOp):
-    pass
+    def __init__(self, left, right, val="/"):
+        super().__init__(left, right, val)
 
 
 class DivOp(BinaryOp):
-    pass
+    def __init__(self, left, right, val="/"):
+        super().__init__(left, right, val)
 
 
 class Parser:
@@ -85,9 +89,9 @@ class Parser:
             self._consume()
             right = self.term()
             if op == "+":
-                res = PlusOp(res, right, "+")
+                res = PlusOp(res, right)
             else:
-                res = MinusOp(res, right, "-")
+                res = MinusOp(res, right)
         return res
 
     def term(self) -> Node:
@@ -96,9 +100,9 @@ class Parser:
             self._consume()
             right = self.factor()
             if op == "*":
-                res = MulOp(res, right, "*")
+                res = MulOp(res, right)
             else:
-                res = DivOp(res, right, "/")
+                res = DivOp(res, right)
         return res
 
     def factor(self) -> Node:
