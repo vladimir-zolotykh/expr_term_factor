@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Callable, NoReturn, cast
+from typing import Callable, NoReturn
 import iter_tokens as IT
 import parse as P
 
@@ -17,28 +17,20 @@ class Visitor:
 
 
 class Evaluator(Visitor):
-    def visitNumber(self, node: P.Node) -> float:
+    def visitNumber(self, node: P.Number) -> float:
         return float(node.val)
 
-    def visitPlusOp(self, node: P.Node) -> float:
-        return self.visit(cast(P.Node, node.left)) + self.visit(
-            cast(P.Node, node.right)
-        )
+    def visitPlusOp(self, node: P.BinaryOp) -> float:
+        return self.visit(node.left) + self.visit(node.right)
 
-    def visitMinusOp(self, node: P.Node) -> float:
-        return self.visit(cast(P.Node, node.left)) - self.visit(
-            cast(P.Node, node.right)
-        )
+    def visitMinusOp(self, node: P.BinaryOp) -> float:
+        return self.visit(node.left) - self.visit(node.right)
 
-    def visitMulOp(self, node: P.Node) -> float:
-        return self.visit(cast(P.Node, node.left)) * self.visit(
-            cast(P.Node, node.right)
-        )
+    def visitMulOp(self, node: P.BinaryOp) -> float:
+        return self.visit(node.left) * self.visit(node.right)
 
-    def visitDivOp(self, node: P.Node) -> float:
-        return self.visit(cast(P.Node, node.left)) / self.visit(
-            cast(P.Node, node.right)
-        )
+    def visitDivOp(self, node: P.BinaryOp) -> float:
+        return self.visit(node.left) / self.visit(node.right)
 
 
 if __name__ == "__main__":

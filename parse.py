@@ -9,8 +9,6 @@ import iter_tokens as IT
 
 @dataclass
 class Node:
-    left: Node | None
-    right: Node | None
     val: Any
 
     def __repr__(self):
@@ -27,10 +25,14 @@ class UnaryOp(Node):
 
 
 class BinaryOp(Node):
+    left: Node
+    right: Node
     op = ""
 
     def __init__(self, left, right, val=None):
-        super().__init__(left, right, val if val else self.__class__.op)
+        self.left = left
+        self.right = right
+        super().__init__(val if val else self.__class__.op)
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.left}, {self.right})"
@@ -114,7 +116,7 @@ class Parser:
             self._expect(")")
             return res
         else:
-            res = Number(None, None, tok.val)
+            res = Number(tok.val)
             self._advance()
             return res
 
