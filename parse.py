@@ -27,28 +27,29 @@ class UnaryOp(Node):
 
 
 class BinaryOp(Node):
+    op = ""
+
+    def __init__(self, left, right, val=None):
+        super().__init__(left, right, val if val else self.__class__.op)
+
     def __repr__(self):
         return f"{self.__class__.__name__}({self.left}, {self.right})"
 
 
 class PlusOp(BinaryOp):
-    def __init__(self, left, right, val="+"):
-        super().__init__(left, right, val)
+    op = "+"
 
 
 class MinusOp(BinaryOp):
-    def __init__(self, left, right, val="-"):
-        super().__init__(left, right, val)
+    op = "-"
 
 
 class MulOp(BinaryOp):
-    def __init__(self, left, right, val="/"):
-        super().__init__(left, right, val)
+    op = "*"
 
 
 class DivOp(BinaryOp):
-    def __init__(self, left, right, val="/"):
-        super().__init__(left, right, val)
+    op = "/"
 
 
 class Parser:
