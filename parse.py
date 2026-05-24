@@ -27,7 +27,8 @@ class UnaryOp(Node):
 
 
 class BinaryOp(Node):
-    pass
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.left}, {self.right})"
 
 
 class PlusOp(BinaryOp):
