@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Iterator, Any
+from typing import Iterator, Any, cast
 import re
 from dataclasses import dataclass
 
@@ -36,7 +36,7 @@ master_pat = "|".join(val for val in patterns.values())
 def iter_tokens(expr: str) -> Iterator[Token]:
     master_pat = "|".join(val for val in patterns.values())
     for match in re.finditer(master_pat, expr):
-        tok = Token(match.lastgroup, match.group(0))
+        tok = Token(cast(str, match.lastgroup), match.group(0))
         if tok.name != "WS":
             yield tok
 

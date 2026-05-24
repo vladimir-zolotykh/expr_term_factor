@@ -9,8 +9,8 @@ import iter_tokens as IT
 
 @dataclass
 class Node:
-    left: Node
-    right: Node
+    left: Node | None
+    right: Node | None
     val: Any
 
     def __repr__(self):
@@ -51,12 +51,12 @@ class Parser:
     def __init__(self):
         self.tok: IT.Token | None = None
 
-    def parse(self, expr) -> Node:
+    def parse(self, expr: str) -> Node:
         self.tokens = IT.iter_tokens(expr)
         self._advance()
         return self.expr()
 
-    def _advance(self) -> IT.Token:
+    def _advance(self) -> IT.Token | None:
         try:
             self.tok = next(self.tokens)
             return self.tok
@@ -96,14 +96,20 @@ class Parser:
                 res = DivOp(res, right, "/")
         return res
 
+    def _expect_tok(self) -> IT.Token:
+        if self.tok is None:
+            raise SyntaxError("Unexpected EOF")
+        return self.tok
+
     def factor(self) -> Node:
-        if self.tok and self.tok.val == "(":
+        tok = self._expect_tok()
+        if tok.val == "(":
             self._consume()
             res = self.expr()
             self._expect(")")
             return res
         else:
-            res = Number(None, None, self.tok.val)
+            res = Number(None, None, tok.val)
             self._advance()
             return res
 
