@@ -64,6 +64,7 @@ class Parser:
         return self.expr()
 
     def _advance(self) -> IT.Token | None:
+        """EOF is allowed"""
         try:
             self.tok = next(self.tokens)
             return self.tok
@@ -71,6 +72,7 @@ class Parser:
             return None
 
     def _consume(self):
+        """EOF is not allowed"""
         try:
             self.tok = next(self.tokens)
         except StopIteration:
@@ -79,7 +81,6 @@ class Parser:
     def _expect(self, expected: str) -> None:
         if self.tok and self.tok.val != expected:
             raise SyntaxError(f"{expected} is expected, got f{self.tok.val}")
-        # self._consume()
         self._advance()
 
     def _expect_tok(self) -> IT.Token:
