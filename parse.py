@@ -79,7 +79,8 @@ class Parser:
     def _expect(self, expected: str) -> None:
         if self.tok and self.tok.val != expected:
             raise SyntaxError(f"{expected} is expected, got f{self.tok.val}")
-        self._consume()
+        # self._consume()
+        self._advance()
 
     def _expect_tok(self) -> IT.Token:
         if self.tok is None:
