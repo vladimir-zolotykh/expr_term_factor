@@ -33,7 +33,25 @@ class Evaluator(Visitor):
         return self.visit(node.left) / self.visit(node.right)
 
 
+class Sexpr(Visitor):
+    def visitNumber(self, node: P.Number) -> str:
+        return f"{str(node.val)}"
+
+    def visitPlusOp(self, node: P.BinaryOp) -> str:
+        return f"(+ {self.visit(node.left)} {self.visit(node.right)})"
+
+    def visitMinusOp(self, node: P.BinaryOp) -> str:
+        return f"(- {self.visit(node.left)} {self.visit(node.right)})"
+
+    def visitMulOp(self, node: P.BinaryOp) -> str:
+        return f"(* {self.visit(node.left)} {self.visit(node.right)})"
+
+    def visitDivOp(self, node: P.BinaryOp) -> str:
+        return f"(/ {self.visit(node.left)} {self.visit(node.right)})"
+
+
 if __name__ == "__main__":
     print(eval(IT.expr))
     expr = P.Parser().parse(IT.expr)
     print(Evaluator().visit(expr))
+    print(Sexpr().visit(expr))
