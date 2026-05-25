@@ -27,8 +27,6 @@ def test_parse_single_number(parser):
 
     assert isinstance(tree, Number)
     assert tree.val == "42"
-    assert tree.left is None
-    assert tree.right is None
 
 
 # -------------------------
@@ -205,12 +203,12 @@ def test_missing_closing_parenthesis(parser):
 
 
 def test_number_repr():
-    node = Number(None, None, "5")
+    node = Number("5")
 
     assert repr(node) == "Number(5)"
 
 
 def test_binary_repr():
-    tree = PlusOp(Number(None, None, "2"), Number(None, None, "3"), "+")
+    tree = PlusOp(Number("2"), Number("3"), "+")
 
     assert repr(tree) == "PlusOp(Number(2), Number(3))"
