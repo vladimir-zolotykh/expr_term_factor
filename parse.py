@@ -60,28 +60,28 @@ class Parser:
 
     def parse(self, expr: str) -> Node:
         self.tokens = IT.iter_tokens(expr)
-        self._advance()
+        self._consume()
         return self.expr()
 
     def _advance(self) -> IT.Token | None:
-        """EOF is allowed"""
+        """EOF is NOT allowed"""
         try:
             self.tok = next(self.tokens)
             return self.tok
         except StopIteration:
-            return None
+            raise SyntaxError("Unexpected EOF")
 
-    def _consume(self):
-        """EOF is not allowed"""
+    def _consume(self) -> None:
+        """EOF is allowed"""
         try:
             self.tok = next(self.tokens)
         except StopIteration:
-            raise SyntaxError("Unexpected EOF")
+            pass
 
     def _expect(self, expected: str) -> None:
         if self.tok and self.tok.val != expected:
             raise SyntaxError(f"{expected} is expected, got f{self.tok.val}")
-        self._advance()
+        self._consume()
 
     def _expect_tok(self) -> IT.Token:
         if self.tok is None:
@@ -91,7 +91,7 @@ class Parser:
     def expr(self) -> Node:
         res: Node = self.term()
         while self.tok and (op := self.tok.val) in ("+", "-"):
-            self._consume()
+            self._advance()
             right = self.term()
             if op == "+":
                 res = PlusOp(res, right)
@@ -102,7 +102,7 @@ class Parser:
     def term(self) -> Node:
         res: Node = self.factor()
         while self.tok and (op := self.tok.val) in ("*", "/"):
-            self._consume()
+            self._advance()
             right = self.factor()
             if op == "*":
                 res = MulOp(res, right)
@@ -113,13 +113,13 @@ class Parser:
     def factor(self) -> Node:
         tok = self._expect_tok()
         if tok.val == "(":
-            self._consume()
+            self._advance()
             res = self.expr()
             self._expect(")")
             return res
         else:
             res = Number(tok.val)
-            self._advance()
+            self._consume()
             return res
 
 
